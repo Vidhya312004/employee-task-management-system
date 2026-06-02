@@ -1,0 +1,27 @@
+/* Task Details component styles */
+.task-details-container {
+  padding: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.back-btn {
+  margin-bottom: 1rem;
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.back-btn:hover {
+  text-decoration: underline;
+}
+.page-title {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+/* Additional styles can be added as needed */

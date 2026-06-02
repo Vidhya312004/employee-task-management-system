@@ -1,0 +1,84 @@
+<div class="settings-container fade-in">
+  <div class="settings-header">
+    <div class="header-content">
+      <h2>Admin Settings</h2>
+      <p>Manage application preferences and configurations.</p>
+    </div>
+  </div>
+
+  <div class="settings-grid">
+    <!-- General Settings -->
+    <div class="settings-card">
+      <div class="card-header">
+        <span class="material-symbols-rounded icon-primary">tune</span>
+        <h3>General Appearance</h3>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>Application Name</label>
+          <input type="text" class="form-control" [(ngModel)]="appName" placeholder="Enter app name">
+        </div>
+        
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Dark Mode</h4>
+            <p>Toggle dark mode appearance (Beta)</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="darkMode">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="settings-card">
+      <div class="card-header">
+        <span class="material-symbols-rounded icon-warning">notifications</span>
+        <h3>Notifications</h3>
+      </div>
+      <div class="card-body">
+        <div class="setting-row">
+          <div class="setting-info">
+            <h4>Email Notifications</h4>
+            <p>Receive daily summary emails</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="emailNotifications">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Settings -->
+    <div class="settings-card">
+      <div class="card-header">
+        <span class="material-symbols-rounded icon-success">person</span>
+        <h3>Admin Profile</h3>
+      </div>
+      <div class="card-body">
+        <div class="profile-summary" *ngIf="user">
+          <img [src]="user.profile_image || '/logo.png'" alt="Profile" class="profile-img">
+          <div class="profile-details">
+            <h4>{{ user.name }}</h4>
+            <p>{{ user.email }}</p>
+            <span class="role-badge">Administrator</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-actions" style="display: flex; align-items: center; gap: 1rem; justify-content: flex-end; margin-top: 1rem;">
+    <span *ngIf="showSuccess" class="success-text fade-in" style="color: #10B981; font-size: 0.95rem; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
+      <span class="material-symbols-rounded">check_circle</span> Settings saved successfully!
+    </span>
+    <button class="btn btn-primary btn-save" (click)="saveSettings()" [disabled]="isSaving">
+      <span class="material-symbols-rounded" *ngIf="!isSaving">save</span>
+      <span class="material-symbols-rounded" *ngIf="isSaving" style="animation: spin 1s linear infinite;">sync</span>
+      {{ isSaving ? 'Saving...' : 'Save Changes' }}
+    </button>
+  </div>
+</div>

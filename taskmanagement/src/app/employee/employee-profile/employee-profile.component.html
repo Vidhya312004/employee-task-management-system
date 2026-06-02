@@ -1,0 +1,137 @@
+<div class="profile-container">
+  <div class="profile-card glassmorphism">
+    <div class="card-header">
+      <div class="header-content">
+        <div class="avatar-container">
+          <div class="avatar-wrapper" (click)="toggleMenu($event)">
+            <img *ngIf="user?.profile_image" [src]="user?.profile_image" alt="Profile" class="profile-avatar">
+            <div *ngIf="!user?.profile_image" class="avatar-placeholder">
+              <span class="material-symbols-rounded">account_circle</span>
+            </div>
+            <div class="avatar-overlay">
+              <span class="material-symbols-rounded" *ngIf="!isUploading">photo_camera</span>
+              <span class="spinner-border spinner-border-sm" *ngIf="isUploading"></span>
+            </div>
+          </div>
+
+          <!-- Sleek Avatar Action Dropdown Menu -->
+          <div class="avatar-dropdown glassmorphism-menu" *ngIf="showMenu" (click)="$event.stopPropagation()">
+            <button type="button" class="dropdown-item" (click)="triggerGalleryUpload()">
+              <span class="material-symbols-rounded">image</span>
+              Upload from Gallery
+            </button>
+            <button type="button" class="dropdown-item" (click)="openCamera()">
+              <span class="material-symbols-rounded">videocam</span>
+              Take a Picture
+            </button>
+            <button type="button" class="dropdown-item remove-btn" *ngIf="user?.profile_image" (click)="removeImage()">
+              <span class="material-symbols-rounded">delete</span>
+              Remove Image
+            </button>
+          </div>
+        </div>
+        <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+        
+        <div class="header-text">
+          <h2>My Profile</h2>
+          <span class="role-badge">{{ user?.role }}</span>
+        </div>
+      </div>
+      <button class="btn-icon" (click)="toggleEditMode()" [title]="editMode ? 'Cancel Edit' : 'Edit Profile'">
+        <span class="material-symbols-rounded">{{ editMode ? 'close' : 'edit' }}</span>
+      </button>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+    <div class="card-body" *ngIf="user">
+      <!-- VIEW MODE -->
+      <div *ngIf="!editMode" class="profile-details">
+        <div class="detail-group">
+          <label>Name</label>
+          <p>{{ user.name }}</p>
+        </div>
+        
+        <div class="detail-group">
+          <label>Email</label>
+          <p>{{ user.email }}</p>
+        </div>
+
+        <div class="detail-group">
+          <label>Department</label>
+          <p>{{ user.department || 'Not specified' }}</p>
+        </div>
+
+        <div class="detail-group">
+          <label>Phone</label>
+          <p>{{ user.phone || 'Not specified' }}</p>
+        </div>
+      </div>
+
+      <!-- EDIT MODE -->
+      <form *ngIf="editMode" (ngSubmit)="saveProfile()" #profileForm="ngForm" class="profile-form">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" [(ngModel)]="editData.name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email (Cannot be changed)</label>
+          <input type="email" [value]="user.email" disabled class="disabled-input">
+        </div>
+
+        <div class="form-group">
+          <label for="department">Department</label>
+          <input type="text" id="department" name="department" [(ngModel)]="editData.department">
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="text" id="phone" name="phone" [(ngModel)]="editData.phone">
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="toggleEditMode()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="!profileForm.form.valid || isLoading">
+            {{ isLoading ? 'Saving...' : 'Save Changes' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card-footer">
+      <a [routerLink]="user?.role === 'admin' ? '/admin/dashboard' : '/employee/dashboard'" class="back-link">&larr; Back to Dashboard</a>
+    </div>
+  </div>
+</div>
+
+<!-- Camera Capture Modal Overlay -->
+<div class="camera-modal-overlay" *ngIf="showCameraModal">
+  <div class="camera-modal glassmorphism">
+    <div class="modal-header">
+      <h3>Take a Picture</h3>
+      <button type="button" class="btn-close" (click)="closeCamera()">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="camera-loading" *ngIf="isCameraLoading">
+        <span class="spinner-border"></span>
+        <p>Initializing camera...</p>
+      </div>
+      
+      <video #videoElement autoplay playsinline [class.hidden]="isCameraLoading"></video>
+      <canvas #canvasElement style="display: none;"></canvas>
+    </div>
+    
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" (click)="closeCamera()">Cancel</button>
+      <button type="button" class="btn-primary flex-btn" (click)="captureImage()" [disabled]="isCameraLoading">
+        <span class="material-symbols-rounded">photo_camera</span>
+        Capture & Upload
+      </button>
+    </div>
+  </div>
+</div>

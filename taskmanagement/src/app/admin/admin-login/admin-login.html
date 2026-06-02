@@ -1,0 +1,53 @@
+<div class="auth-container admin-portal-bg">
+  <div class="bg-shape bg-shape-1"></div>
+  <div class="bg-shape bg-shape-2"></div>
+  <div class="bg-shape bg-shape-3"></div>
+  <div class="auth-card glass-card">
+    <div class="auth-header" style="text-align: center;">
+      <img src="/logo.png" alt="Zira Logo" style="width: 80px; margin-bottom: 1rem; display: block; margin-left: auto; margin-right: auto;">
+      <h2>Admin Portal</h2>
+      <p>Welcome back! Please login to your admin account.</p>
+    </div>
+    
+    <div *ngIf="errorMessage" class="error-alert">
+      {{ errorMessage }}
+    </div>
+    
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email"
+          class="form-control" 
+          [(ngModel)]="credentials.email" 
+          required 
+          placeholder="admin@example.com">
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password"
+          class="form-control" 
+          [(ngModel)]="credentials.password" 
+          required 
+          placeholder="Enter your password">
+      </div>
+      
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="isLoading || !loginForm.form.valid">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        {{ isLoading ? 'Logging in...' : 'Login' }}
+      </button>
+    </form>
+    
+    <div class="auth-footer">
+      <p>Don't have an admin account? <a routerLink="/admin/register">Register here</a></p>
+      <p class="mt-2"><a routerLink="/forgot-password" class="text-secondary">Forgot your password?</a></p>
+      <p class="mt-2"><a routerLink="/employee/login" class="text-secondary">Switch to Employee Login</a></p>
+    </div>
+  </div>
+</div>

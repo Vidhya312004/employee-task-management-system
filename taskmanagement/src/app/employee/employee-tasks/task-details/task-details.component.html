@@ -1,0 +1,60 @@
+<div class="task-details-container">
+  <button class="back-btn" (click)="goBack()">
+    <span class="material-symbols-rounded">arrow_back</span> Back
+  </button>
+
+  <h2 class="page-title">Task Details</h2>
+
+  <div *ngIf="task" class="task-info">
+    <h3>{{ task.task_title }}</h3>
+    <p><strong>Project:</strong> {{ task.project?.project_name || task.project_id }}</p>
+    <p><strong>Status:</strong>
+      <select [(ngModel)]="newStatus" class="status-select">
+        <option value="pending">Pending</option>
+        <option value="in_progress">In Progress</option>
+        <option value="completed">Completed</option>
+      </select>
+    </p>
+    <p><strong>Progress:</strong> {{ newProgress }}%
+      <input type="range" min="0" max="100" [(ngModel)]="newProgress" class="form-range" />
+    </p>
+    <button class="btn btn-primary" (click)="updateTask()">
+      <span class="material-symbols-rounded">save</span> Save Changes
+    </button>
+  </div>
+
+  <hr />
+
+  <section class="comments-section">
+    <h3>Comments</h3>
+    <div *ngIf="taskComments.length > 0" class="comments-list">
+      <div class="comment-item" *ngFor="let c of taskComments">
+        <div class="comment-author">{{ c.user?.name || 'User ' + c.user_id }}</div>
+        <div class="comment-text">{{ c.comment }}</div>
+        <div class="comment-time">{{ formatDate(c.created_at) }}</div>
+      </div>
+    </div>
+    <div *ngIf="taskComments.length === 0" class="empty-list">No comments yet.</div>
+    <textarea [(ngModel)]="newComment" placeholder="Write a comment..." rows="3" class="form-control"></textarea>
+    <button class="btn btn-primary mt-2" (click)="submitComment()" [disabled]="!newComment.trim()">
+      Post Comment
+    </button>
+  </section>
+
+  <hr />
+
+  <section class="files-section">
+    <h3>Files</h3>
+    <div *ngIf="taskFiles.length > 0" class="files-list">
+      <div class="file-item" *ngFor="let f of taskFiles">
+        <span class="material-symbols-rounded file-icon">insert_drive_file</span>
+        <a [href]="getFileUrl(f.file_path)" target="_blank" class="file-name">{{ f.file_name }}</a>
+      </div>
+    </div>
+    <div *ngIf="taskFiles.length === 0" class="empty-list">No files uploaded.</div>
+    <input type="file" (change)="onFileSelected($event)" class="form-control mb-2" />
+    <button class="btn btn-primary" (click)="uploadFile()" [disabled]="!selectedFile">
+      <span class="material-symbols-rounded">upload</span> Upload File
+    </button>
+  </section>
+</div>
